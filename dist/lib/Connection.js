@@ -29,10 +29,11 @@ var instance = null;
 
 var Connection = function () {
   function Connection(database, username, password) {
-    var options = arguments.length <= 3 || arguments[3] === undefined ? {} : arguments[3];
-    var discover = arguments.length <= 4 || arguments[4] === undefined ? ["/model"] : arguments[4];
-    var matcher = arguments.length <= 5 || arguments[5] === undefined ? null : arguments[5];
-    var logger = arguments.length <= 6 || arguments[6] === undefined ? false : arguments[6];
+    var options = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
+    var discover = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : ["/model"];
+    var matcher = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : null;
+    var logger = arguments.length > 6 && arguments[6] !== undefined ? arguments[6] : false;
+    var sync = arguments.length > 7 && arguments[7] !== undefined ? arguments[7] : true;
 
     _classCallCheck(this, Connection);
 
@@ -106,9 +107,10 @@ var Connection = function () {
       }).then(function () {
         // Syncronize the DB
         _this._log("info", "Finished connecting to: " + _this.database + " as: " + _this.username);
+        if (!sync) return;
         return sequelize.sync();
       }).then(function () {
-        _this._log("info", "Finished synchronizing " + _this.database);
+        if (sync) _this._log("info", "Finished synchronizing " + _this.database);
         // Expose objects
         _this.sequelize = sequelize;
         _this.models = models;

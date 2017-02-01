@@ -22,7 +22,7 @@ var fs = _bluebird2.default.promisifyAll(_fs2.default);
 
 var Discoverable = function () {
   function Discoverable(paths, matcher) {
-    var logger = arguments.length <= 2 || arguments[2] === undefined ? false : arguments[2];
+    var logger = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
 
     _classCallCheck(this, Discoverable);
 
@@ -83,17 +83,17 @@ var Discoverable = function () {
         if (stat && stat.isDirectory()) {
           return _this2._dive(path); // Dive into the directory
         } else {
-            // Allow user to define a custom matcher function
-            if (typeof _this2.matcher === 'function' && _this2.matcher(file) === true) {
-              _this2._log("debug", "Discovered path: " + path);
-              return path;
-            } else if (file.indexOf(".") !== 0 && file.indexOf(".model.js") > 0) {
-              _this2._log("debug", "Discovered path: " + path);
-              return path;
-            }
-
-            return false;
+          // Allow user to define a custom matcher function
+          if (typeof _this2.matcher === 'function' && _this2.matcher(file) === true) {
+            _this2._log("debug", "Discovered path: " + path);
+            return path;
+          } else if (file.indexOf(".") !== 0 && file.indexOf(".model.js") > 0) {
+            _this2._log("debug", "Discovered path: " + path);
+            return path;
           }
+
+          return false;
+        }
       });
     }
 
