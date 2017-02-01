@@ -46,6 +46,7 @@ var Connection = function () {
     this.discover = discover; // Set the default discovery paths to ["/model"]
     this.matcher = matcher; // Set the default matcher to null
     this.logger = logger;
+    this.sync_enabled = sync;
 
     // Expose db
     this.models = {};
@@ -107,10 +108,10 @@ var Connection = function () {
       }).then(function () {
         // Syncronize the DB
         _this._log("info", "Finished connecting to: " + _this.database + " as: " + _this.username);
-        if (!sync) return;
+        if (!_this.sync_enabled) return;
         return sequelize.sync();
       }).then(function () {
-        if (sync) _this._log("info", "Finished synchronizing " + _this.database);
+        if (_this.sync_enabled) _this._log("info", "Finished synchronizing " + _this.database);
         // Expose objects
         _this.sequelize = sequelize;
         _this.models = models;
